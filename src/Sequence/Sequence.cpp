@@ -62,35 +62,28 @@ void Sequence<T>::add(T &x, int pos) {
      * point the new node record to the next node
      * point the previous node to the new node record
      */
-    if (pos > 0 || pos > size) {
-        return;
-    }
-    if (pos == 0) {
-        NodeRecord *newNode = new NodeRecord();
-        newNode->value = x;
-        newNode->next = head;
-        head = newNode;
-    } else {
+    if (pos <= size) {
+
+
+        if (pos == 0) {
+            NodeRecord *newNode = new NodeRecord();
+            newNode->value = x;
+            newNode->next = head;
+            head = newNode;
+        } else {
 
 //Create a new node and populate with data.
-        NodeRecord *currentNode = head, *prevNode = NULL;
-        NodeRecord *newNode = new NodeRecord();
-        newNode->value = x;
-        for (int i = 0; i < pos; i++) {
-            prevNode = currentNode;
-            currentNode = currentNode->next;
-
-            //currentNode->value = x;
-            //point the new node record to the next node
-            //currentNode->next = head->next;
-            //point the previous node to the new node record
-            //head->next = currentNode;
+            NodeRecord *currentNode = head;
+            NodeRecord *newNode = new NodeRecord();
+            newNode->value = x;
+            for (int i = 1; i < pos; i++) {
+                currentNode = currentNode->next;
+            }
+            newNode->next = currentNode->next;
+            currentNode->next = newNode;
         }
-        newNode->next = currentNode;
-        prevNode->next = newNode;
+        size++;
     }
-    size++;
-    return;
 }
 
 template<class T>
@@ -145,17 +138,15 @@ std::optional<T> Sequence<T>::entry(int pos) {
 
     NodeRecord *currentNode = head;
 
-    if (pos >= size) {
+    if (pos >= size || length() == 0) {
         return std::nullopt;
     } else {
         //Create a var to hold the value.
-        int val = 0;
         //Iterate through the list.
         for (int i = 0; i < pos; ++i) {
             currentNode = currentNode->next;
         }
-        val = currentNode->value;
-        return val;
+        return currentNode->value;
     }
 
 }
@@ -167,8 +158,21 @@ int Sequence<T>::length() {
 
 template<class T>
 std::string Sequence<T>::outputSequence() {
-    std::stringstream ss;
+    /*
+     * Create a string stream.
+     * Iterate through the sequence.
+     * Build the stream.
+     * Print out the contents of the stream.
+     * Return the stream.
+     */
 
+    std::stringstream ss;
+    NodeRecord *currentNode = head;
+    for (int i = 0; i < size - 1; i++) {
+        ss << currentNode->value << ", ";
+        currentNode = currentNode->next;
+    }
+    ss << currentNode->value;
     //Use insertion operator (<<) to build the string.
     return ss.str();
 
